@@ -1,0 +1,14 @@
+asgiref==3.6.0
+distlib==0.3.6
+dj-database-url==2.0.0
+Django==4.2
+django-clearcache==1.2.1
+django-crispy-forms==2.0
+filelock==3.11.0
+gunicorn==20.1.0
+platformdirs==3.2.0
+psycopg2-binary==2.9.6
+sqlparse==0.4.3
+typing_extensions==4.6.2
+tzdata==2023.3
+virtualenv==20.21.0
