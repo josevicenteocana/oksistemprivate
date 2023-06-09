@@ -1,3 +1,4 @@
+.vscode
 manage.py
 db.sqlite3
 oksistem/__pycache__
@@ -10,3 +11,8 @@ eds/migrations
 eds/__init__.py
 eds/tests.py
 eds/static/img
+ganaderia/__pycache__
+ganaderia/migrations
+ganaderia/__init__.py
+ganaderia/tests.py
+
