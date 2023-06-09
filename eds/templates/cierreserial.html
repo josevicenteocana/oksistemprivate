@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Content here -->
+    <h2>Cierre Serial</h2>
+    <p>&nbsp;</p>
+
+    {% if seriales  %}   
+    {% for surtidor in surtidores  %}
+        {% if surtidor.cierre == True %}
+            <form method="POST">
+                {% csrf_token %}   
+                <input type="hidden" name="id_serial" value="{{  surtidor.id }}" >   
+                <button type="submit" class="btn btn-primary btnconfirmar">
+                    PROCESAR CIERRE  {{  surtidor.identificador }}
+                </button>
+            </form>
+            </p>
+        {% endif %}    
+    
+        <div class="card" style="">
+            <table class="table">
+                <tr>
+                    <th>INICIO</th>
+                    <th>FINAL</th>
+                    <th>LITROS</th>
+                    <th>OBSERVACIONES</th>
+                    <th>FECHA</th>
+                    <th>USUARIO</th>
+                    <th>ELIMINAR</th>
+                </tr>
+                {% for serial in seriales  %}
+                {% if serial.identificador_id == surtidor.id  %}
+                <tr>                    
+                    <td>{{  serial.serialinicio }} </td>
+                    <td>{{  serial.serialfinal }} </td>
+                    <td>{{  serial.totallitros }} </td>
+                    <td>{{  serial.observaciones }} </td>
+                    <td>{{  serial.creado }} </td>
+                    <td>{{  serial.usuario }} </td>
+                    <td><a href="/eliminarserial/{{serial.id}}" class="btn btn-danger btnEliminar">Eliminar</a></td>
+                </tr>
+                {% endif %}    
+                {% endfor %}
+                <tr>                    
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td></td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+    
+                </tr>            
+            </table> 
+        </div>    
+        
+    {% endfor %}
+    {% else  %}
+    <div class="alert alert-dismissible  alert-info">
+        <button type="button" class="btn-close" data-bs-dismiss="alert"  aria-label="Close"></button>
+        <strong class="text-dark">No hay cierres pendientes</strong>
+    </div>
+    {% endif  %}
+
+  </div>
+
+
+{% endblock  %}
+

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <!-- Content here -->
+    <h2>Compras</h2>
+    <a href="/nuevafactura" class="btn btn-primary">Nueva Factura</a> 
+    <p>&nbsp;</p>
+
+
+        {% if messages %}
+        <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-dismissible  alert-{{ message.tags }}"{% endif %}>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"  aria-label="Close"></button>
+                <strong class="text-dark">{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </div>
+        {% endif %}
+    
+        <div class="card" style="">
+            <table class="table">
+                <tr>
+                    <th>FACTURA</th>
+                    <th>FECHA DE EMISION</th>
+                    <th>FECHA DE RECEPCION</th>
+                    <th>CANT. BRUTA</th>
+                    <th>CANT. NETA</th>
+                    <th>MONTO A PAGAR</th>
+                    <th>PAGADO</th>
+                    <th>FECHA PAGO</th>
+                    <th>REFERENCIA</th>
+                    <th>USUARIO</th>
+                    <th>EDITAR</th>
+                    <th>ELIMINAR</th>
+                </tr>
+                {% for lista in listas  %}
+                
+                <tr>                    
+                    <td>{{  lista.numero_factura }} </td>
+                    <td>{{  lista.fecha_emision }} </td>
+                    <td>{{  lista.fecha_recibido }} </td>
+                    <td>{{  lista.cant_bruta }} </td>
+                    <td>{{  lista.cant_neta }} </td>
+                    <td>{{  lista.monto_pagar }} </td>
+                    <td>{{  lista.estatus_pago }} </td>
+                    <td>{{  lista.fecha_pago }} </td>
+                    <td>{{  lista.referencia_pago }} </td>
+                    <td>{{  lista.usuario }}</td>
+                    <td><a href="/editarfactura/{{lista.id}}" class="btn btn-warning ">Editar</a></td>
+                    <td>{% if not lista.estatus_pago %}<a href="/eliminarfactura/{{lista.id}}" class="btn btn-danger btnconfirmar">Eliminar</a>{% endif %}</td>
+                </tr>
+                {% endfor %}
+               
+            </table>   
+
+</div>
+
+{% endblock content %}
+
+

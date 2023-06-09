@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+
+<div class="container-fluid text-left">
+    <h2>Registro de Seriales</h2>
+    {% if messages %}
+        <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-dismissible  alert-{{ message.tags }}"{% endif %}>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"  aria-label="Close"></button>
+                <strong class="text-dark">{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-4">
+            <div class="row">
+                <div class="col">
+                    <h4>Nuevo Serial</h4>
+                    <div class="form-control">
+                        <form method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">
+                                Guardar
+                            </button>
+                        </form>
+                    </div>       
+                </div>
+            </div>
+        
+
+
+        </div>
+        <div class="col-8"> 
+           
+
+            {% for surtidor in surtidores  %}
+                <h5>Surtidor: {{  surtidor.identificador }}</h5>
+                <hr/>
+                <div class="card" style="">
+                    <table class="table">
+                        <tr>
+                            <th>Incio</th>
+                            <th>Final</th>
+                            <th>Litros</th>
+                            <th>Observacion</th>
+                            <th>Fecha</th>
+                            <th>Usuario</th>
+                            <th>Eliminar</th>
+                        </tr>
+                        
+                        {% for serial in seriales  %}
+                        {% if serial.identificador_id == surtidor.id  %}                   
+                        <tr>                    
+                            <td>{{  serial.serialinicio }}   </td>
+                            <td>{{  serial.serialfinal }} </td>
+                            <td>{{  serial.totallitros }} </td>
+                            <td>{{  serial.observaciones }} </td>
+                            <td>{{  serial.creado }} </td>
+                            <td>{{  serial.usuario}}</td>
+                            <td><!--<a href="/eliminarserial/{{serial.id}}" class="btn btn-danger btnconfirmar">Eliminar</a>--> </td>
+                        </tr>
+                        {% endif %}    
+                        {% endfor %}
+                    </table> 
+                </div>    
+                
+            {% endfor %}           
+        
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+{% endblock content %}
+
+
+

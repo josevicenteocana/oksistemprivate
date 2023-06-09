@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Cargar Nueva Factura</h1>
+
+{% if messages %}
+<div class="messages">
+{% for message in messages %}
+    <div class="alert {% if message.tags %} alert-dismissible  alert-{{ message.tags }}"{% endif %}>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"  aria-label="Close"></button>
+        <strong class="text-dark">{{ message }}</strong>
+    </div>
+{% endfor %}
+</div>
+{% endif %}
+
+<div class="container text-left">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-control">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-primary">
+                        Guardar
+                    </button>
+                </form>
+            </div> 
+        </div>
+    </div>
+      
+
+{% endblock content %}
+
+

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Content here -->
+        
+    <h2>Lista de Cierres</h2>
+    <p>&nbsp;</p>
+
+    <div class="card" style="">
+        <table class="table">
+            <tr>
+                <th>SURTIDOR</th>
+                <th>FECHA DE INICIO</th>
+                <th>FECHA DE CIERRE</th>
+                <th>SERIAL INICIO</th>
+                <th>SERIAL FINAL</th>
+                <th>TOTAL LITROS</th>
+                <th>USUARIO</th>
+            </tr>
+            {% for cierre in cierres  %}
+            
+            <tr>                    
+                <td>{{  cierre.identificador }} </td>
+                <td>{{  cierre.fecha_incio }} </td>
+                <td>{{  cierre.fecha_final }} </td>
+                <td>{{  cierre.serial_inicio }} </td>
+                <td>{{  cierre.serial_final }} </td>
+                <td>{{  cierre.totallitros }} </td>
+                <td>{{  cierre.usuario }}</td>
+            </tr>
+            {% endfor %}
+        
+        </table> 
+    </div>    
+
+
+</div>
+
+
+{% endblock content %}
+

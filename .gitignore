@@ -1,0 +1,12 @@
+manage.py
+db.sqlite3
+oksistem/__pycache__
+oksistem/__init__.py
+oksistem/asgi.py
+oksistem/settings.py 
+oksistem/wsgi.py
+eds/__pycache__
+eds/migrations
+eds/__init__.py
+eds/tests.py
+eds/static/img
