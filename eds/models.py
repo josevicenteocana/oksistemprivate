@@ -55,6 +55,16 @@ class Cierreseriales(models.Model):
     fecha_final = models.DateTimeField(auto_now=True)
     totallitros = models.IntegerField(default= 0)    
     estatus = models.BooleanField(default=False)
+    
+class CierreVentasDia(models.Model): 
+    producto =  models.CharField(max_length=1)
+    cia = models.ForeignKey(Companias, blank=True, null=True, on_delete=models.CASCADE)
+    creado = models.DateTimeField(auto_now=True)
+    fecha_cierre = models.DateField()
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    litros = models.IntegerField(default= 0)
+    precio = models.FloatField(default= 0)
+    total = models.FloatField(default= 0)
 
 class Facturas(models.Model): 
     cia = models.ForeignKey(Companias, blank=True, null=True, on_delete=models.CASCADE)

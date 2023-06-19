@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Registroseriales, Facturas, RegistroTanques
+from .models import Registroseriales, Facturas, RegistroTanques, MedidasTanques
  
 class RegistroserialesForm(ModelForm):
     class Meta: 
@@ -89,6 +89,32 @@ class RegistroTanquesForm(ModelForm):
             'tanque': forms.Select(attrs={'class':'form-control'}),
             'medida': forms.TextInput(attrs={'class':'form-control'}),
             'observacion': forms.TextInput(attrs={'class':'form-control'})
+        }   
+
+class VolumenTanquesForm(ModelForm):
+    class Meta: 
+        model = MedidasTanques
+        fields = ['tanque','medida', 'litros']
+        labels = {
+            "tanque": ("TANQUE"),
+            "medida": ("MEDIDA CM"),
+            "litros": ("LITROS")
+        }
+        widgets = {
+            'tanque': forms.Select(attrs={'class':'form-control'}),
+            'medida': forms.TextInput(attrs={'class':'form-control'}),
+            'litros': forms.TextInput(attrs={'class':'form-control'})
+        }   
+
+class BusVolumenTanquesForm(ModelForm):
+    class Meta: 
+        model = MedidasTanques
+        fields = ['tanque']
+        labels = {
+            "tanque": (""),
+        }
+        widgets = {
+            'tanque': forms.Select(attrs={'class':'form-control'}),
         }   
 
 

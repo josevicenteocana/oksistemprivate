@@ -21,7 +21,7 @@ from eds import views as eds_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', eds_views.home, name='home') ,
+    path('', eds_views.iniciar, name='iniciar') ,
     path('eds/', eds_views.eds, name='eds') ,
     path('login/', eds_views.autenticar, name='login'),
     path('panel/', eds_views.panel, name='panel'),
@@ -38,6 +38,11 @@ urlpatterns = [
     path('editarfactura/<id>', eds_views.editarfactura, name='editarfactura'),
     path('registrotanques/', eds_views.registrotanques, name='registrotanques'),
     path('eliminarregistrotanque/<id>', eds_views.eliminarregistrotanque, name='eliminarregistrotanque'),
+    path('volumentanques', eds_views.volumentanques, name='volumentanques'),
+    path('elivolumenmedida/<id>', eds_views.elivolumenmedida, name='elivolumenmedida'),
+    path('autvolumenmedida', eds_views.autvolumenmedida, name='autvolumenmedida'),
+    path('buscarmedidastanques', eds_views.buscarmedidastanques, name='buscarmedidastanques'),
+    path('cierrediario', eds_views.cierrediario, name='cierrediario'),
 
-
+    
 ]

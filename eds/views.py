@@ -4,8 +4,8 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from eds.models import Surtidores, Companias, Registroseriales, Cierreseriales, Facturas, RegistroTanques, MedidasTanques, Tanques, Aplicaciones
-from .forms import RegistroserialesForm, FacturasForm, RegistroTanquesForm
+from eds.models import Surtidores, Companias, Registroseriales, Cierreseriales, Facturas, RegistroTanques, MedidasTanques, Tanques, Aplicaciones,  CierreVentasDia
+from .forms import RegistroserialesForm, FacturasForm, RegistroTanquesForm, VolumenTanquesForm, BusVolumenTanquesForm
 from django.contrib import messages
 from datetime import datetime, timedelta, time, date
 
@@ -161,9 +161,13 @@ def cierreserial(request):
     else:
         try:
             mensaje = "No se pudo guardar"
+            current_date = date.today()  
+            
             id_surtidor = request.POST['id_serial']
             serial_inicial = Registroseriales.objects.filter(cia = cia.pk, identificador= id_surtidor, estatus=True ).last()
             serial_final = Registroseriales.objects.filter(cia = cia.pk, identificador= id_surtidor, estatus=False ).last()
+            datos_surtidor = Surtidores.objects.get(cia = cia.pk, id= id_surtidor)  
+
             
             guardar_cierre = Cierreseriales(serial_inicio = serial_inicial.serialfinal,fecha_incio=serial_inicial.creado, serial_final= serial_final.serialfinal )
             #guardar_cierre = Cierreseriales.objects.create(identificador=id_surtidor,  cia = cia.pk, , ,)
@@ -174,8 +178,25 @@ def cierreserial(request):
             guardar_cierre.save()
 
             ejecutar_cierre = Registroseriales.objects.filter(cia = cia.pk, identificador= id_surtidor).update(estatus=True)
-            cambiar_estado = Surtidores.objects.filter(cia = cia.pk, id = id_surtidor).update(cierre=False)        
+            cambiar_estado = Surtidores.objects.filter(cia = cia.pk, id = id_surtidor).update(cierre=False)                  
+             
+            #Insertar o Actualizar en el Cierre del dia
+            cierrediario, created = CierreVentasDia.objects.get_or_create(producto=datos_surtidor.tipo, fecha_cierre=current_date, cia= Companias.objects.get(usuario=request.user), 
+                                                                          usuario=request.user)
+            if created:
+                cierrediario.litros = 100
+                cierrediario.precio = 0.50
+                cierrediario.total = 50
+                cierrediario.save()
+                #messages.success(request, 'Cierre Ejecutado')  
+                
 
+            else:
+                #messages.success(request, 'Cierre Actualizado')  
+                cierrediario.litros = cierrediario.litros + 100
+                cierrediario.total = cierrediario.litros * 0.50 
+                cierrediario.save()
+                       
             return render(request, 'cierreserial.html', {
             'seriales': seriales,
             'surtidores': surtidores,
@@ -187,8 +208,16 @@ def cierreserial(request):
             'seriales': seriales,
             'surtidores': surtidores
 
-        } )             
+        } )       
             
+                  
+#Lista de Cierres Diarios            
+def cierrediario(request):
+    cia = Companias.objects.get(usuario=request.user)   
+    lista = CierreVentasDia.objects.filter(cia = cia.pk)
+    return render(request, 'listacierrediario.html', 
+        { 'listas': lista  }              
+    )     
 
 def eliminarserial(request,id):
     registroserial = Registroseriales.objects.get(id=id)
@@ -301,7 +330,75 @@ def eliminarregistrotanque(request,id):
     return redirect("registrotanques")
 
     
+def volumentanques(request):    
+    cia = Companias.objects.get(usuario=request.user)   
+    listas = MedidasTanques.objects.filter(cia = cia.pk ).order_by('-medida')[:500]
+    if request.method == 'POST':
+        try: 
+            #CONSULTAR SI YA EXISTE LA MEDIDA REGISTRADA PARA EL TANQUE
+            verificar = MedidasTanques.objects.filter(cia=cia.pk, tanque=request.POST['tanque'], medida = request.POST['medida'])  
+            if not verificar :
+                #consulta medida de tanque
+                form = VolumenTanquesForm(request.POST)     
+                if form.is_valid(): 
+                    guardar = form.save(commit=False)
+                    guardar.usuario = request.user      
+                    guardar.cia = Companias.objects.get(usuario=request.user)                    
+                    guardar.save()
+                    messages.success(request, 'Registro guardado exitosamente')  
+                    return redirect('volumentanques')
+            else: 
+                messages.warning(request, 'Registro Duplicado')  
+
+                
+        except ValueError:  
+            messages.warning(request, form.id)        
+            return render(request, 'volumentanques', {'form' : VolumenTanquesForm})    
+ 
+
     
+    return render(request, 'volumentanques.html',
+                  {'form': VolumenTanquesForm,
+                   'formbuscar' : BusVolumenTanquesForm,
+                   'listas': listas }
+                  )
+ 
+def elivolumenmedida(request,id):
+    registro = MedidasTanques.objects.get(id=id)
+    registro.delete()
+    messages.success(request, 'Registro eliminado correctamente')  
+    return redirect("volumentanques")
+ 
+ #asignacion automatica del volumen de un tanque
+def autvolumenmedida(request):
+    cia = Companias.objects.get(usuario=request.user)      
+    tanque1 = MedidasTanques.objects.filter(cia = cia.pk, tanque=int(request.POST['tanque'] ))
     
+    for listadoMedidas in tanque1:
+        tanque2 = MedidasTanques()
+        tanque2.cia = Companias.objects.get(usuario=request.user)  
+        tanque2.usuario = request.user
+        tanque2.tanque = Tanques.objects.get(id=request.POST['tanquedestino'])   
+        tanque2.medida = listadoMedidas.medida
+        tanque2.litros = listadoMedidas.litros
+        tanque2.save()
+        messages.success(request, 'Automatizacion completada')  
+        
+    return redirect("volumentanques")
+    
+
+#buscar medidas por tanque
+def buscarmedidastanques(request):    
+    cia = Companias.objects.get(usuario=request.user)   
+    if request.method == 'POST': 
+        listas = MedidasTanques.objects.filter(cia = cia.pk, tanque = request.POST['tanque'] ).order_by('-medida')[:500]
+    else: 
+        listas = MedidasTanques.objects.filter(cia = cia.pk ).order_by('-medida')[:500]
+    
+    return render(request, 'volumentanques.html',
+                  {'form': VolumenTanquesForm,
+                   'formbuscar' : BusVolumenTanquesForm,
+                   'listas': listas }
+                  )
     
    
