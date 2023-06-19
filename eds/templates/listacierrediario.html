@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <!-- Content here -->
+    <h2>Lista de Cierres Diarios</h2>
+        <div class="card" style="">
+            <table class="table">
+                <tr>
+                    <th>PRODUCTO</th>
+                    <th>FECHA CIERRE</th>
+                    <th>LITROS</th>
+                    <th>PRECIO</th>
+                    <th>TOTAL USD</th>
+                    <th>USUARIO</th>
+                </tr>
+                {% for lista in listas  %}
+                <tr>                    
+                    <td>{{  lista.producto }} </td>
+                    <td>{{  lista.fecha_cierre }} </td>
+                    <td>{{  lista.litros }} </td>
+                    <td>{{  lista.precio }} </td>
+                    <td>{{  lista.total }} </td>
+                    <td>{{  lista.usuario }} </td>
+                </tr>
+                {% endfor %}
+          
+            </table> 
+        </div>    
+        
+    
+</div>
+
+
+
+{% endblock content %}
+

@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid">
+
+    <h2>Volumen Tanques</h2>
+    {% if messages %}
+        <div class="messages">
+        {% for message in messages %}
+            <div class="alert {% if message.tags %} alert-dismissible  alert-{{ message.tags }}"{% endif %}>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"  aria-label="Close"></button>
+                <strong class="text-dark">{{ message }}</strong>
+            </div>
+        {% endfor %}
+        </div>
+    {% endif %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-3 col-md-3 col-lg-4">
+            <div class="row">
+                <div class="col">
+                    <h4>Nuevo Registro</h4>
+                    <div class="form-control">
+                        <form method="POST" action="volumentanques">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary">
+                                Guardar
+                            </button>
+                        </form>
+                    </div>       
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h4>Asignacion Automatica</h4>
+                    <div class="form-control">
+                        <form method="POST" action="autvolumenmedida">
+                            {% csrf_token %}
+                            Tanque Origen
+                            {{ formbuscar.as_p }}
+                            Tanque Destino
+                            <input type="text" class="form-control" name="tanquedestino">
+                            <button type="submit" class="btn btn-primary">
+                                Guardar
+                            </button>
+                        </form>
+                    </div>       
+                </div>
+            </div>
+
+        </div>
+        <div class="col-xs-12 col-sm-9 col-md-9 col-lg-8"> 
+            <div class="form-control">
+                <form method="POST" action="buscarmedidastanques">
+                    <div class="row">
+                        <div class="col-2"> 
+                           Buscar: 
+                        </div> 
+                        <div class="col-6"> 
+                            {% csrf_token %}
+                            {{ formbuscar }}
+                        </div> 
+                        <div class="col-2"> 
+                            <button type="submit" class="btn btn-primary">
+                                Buscar
+                            </button>      
+                        </div>          
+                    </div> 
+                </form>
+            </div>     
+            <table class="table">
+                <tr>
+                    <th>TANQUE</th>
+                    <th>MEDIDA CM</th>
+                    <th>LITROS</th>
+                    <th>USUARIO</th>
+                    <th>ELIMINAR</th>
+                </tr>
+                
+                {% for lista in listas  %}
+                <tr>                    
+                    <td>{{  lista.tanque }}   </td>
+                    <td>{{  lista.medida }} </td>
+                    <td>{{  lista.litros }} </td>
+                    <td>{{  lista.usuario }} </td>
+                    <td><a href="/elivolumenmedida/{{lista.id}}" class="btn btn-danger btnconfirmar">Eliminar</a> </td>
+                </tr>
+                {% endfor %}
+            </table> 
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+
