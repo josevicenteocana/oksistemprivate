@@ -47,7 +47,7 @@ def autenticar (request):
     
 def cerrarsesion(request):
     logout(request)
-    return redirect('home')  
+    return redirect('/')  
         
 def iniciar(request):
     if request.method == 'GET':
