@@ -38,7 +38,7 @@ class Registroseriales(models.Model):
     serialfinal = models.IntegerField(default=0)    
     totallitros = models.IntegerField(default= 0)    
     estatus = models.BooleanField(default=False)
-    observaciones = models.CharField(max_length=300, null=True)
+    observaciones = models.CharField(max_length=300, null=True, default="0")
 
     
     def __str__(self):
