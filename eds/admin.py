@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Companias, Surtidores, Registroseriales, Cierreseriales, Tanques, RegistroTanques, MedidasTanques, Aplicaciones
+from .models import Companias, Surtidores, Registroseriales, Cierreseriales, Tanques, RegistroTanques, MedidasTanques, Aplicaciones, CierreVentasDia
 # Register your models here.
 
 admin.site.register(Companias)
@@ -10,5 +10,6 @@ admin.site.register(Tanques)
 admin.site.register(RegistroTanques)
 admin.site.register(MedidasTanques)
 admin.site.register(Aplicaciones)
+admin.site.register(CierreVentasDia)
 
 

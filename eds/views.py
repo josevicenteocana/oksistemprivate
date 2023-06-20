@@ -184,16 +184,16 @@ def cierreserial(request):
             cierrediario, created = CierreVentasDia.objects.get_or_create(producto=datos_surtidor.tipo, fecha_cierre=current_date, cia= Companias.objects.get(usuario=request.user), 
                                                                           usuario=request.user)
             if created:
-                cierrediario.litros = 100
+                cierrediario.litros = serial_final.serialfinal - serial_inicial.serialfinal
                 cierrediario.precio = 0.50
-                cierrediario.total = 50
+                cierrediario.total = cierrediario.litros * cierrediario.precio
                 cierrediario.save()
                 #messages.success(request, 'Cierre Ejecutado')  
                 
 
             else:
                 #messages.success(request, 'Cierre Actualizado')  
-                cierrediario.litros = cierrediario.litros + 100
+                cierrediario.litros = cierrediario.litros + (serial_final.serialfinal - serial_inicial.serialfinal)
                 cierrediario.total = cierrediario.litros * 0.50 
                 cierrediario.save()
                        
