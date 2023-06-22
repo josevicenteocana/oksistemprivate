@@ -56,16 +56,23 @@ class Cierreseriales(models.Model):
     totallitros = models.IntegerField(default= 0)    
     estatus = models.BooleanField(default=False)
     
+    def __str__(self):
+        return str(self.identificador)  +'-'+ str(self.totallitros)
+    
 class CierreVentasDia(models.Model): 
     producto =  models.CharField(max_length=1)
     cia = models.ForeignKey(Companias, blank=True, null=True, on_delete=models.CASCADE)
     creado = models.DateTimeField(auto_now=True)
-    fecha_cierre = models.DateField()
+    fecha_cierre = models.DateField(null=True)
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     litros = models.IntegerField(default= 0)
     precio = models.FloatField(default= 0)
     total = models.FloatField(default= 0)
 
+    def __str__(self):
+        return str(self.producto)  +'-'+ str(self.total)
+    
+    
 class Facturas(models.Model): 
     cia = models.ForeignKey(Companias, blank=True, null=True, on_delete=models.CASCADE)
     creado = models.DateTimeField(auto_now=True)
@@ -80,8 +87,8 @@ class Facturas(models.Model):
     cant_neta = models.FloatField()
     monto_pagar = models.FloatField()
     estatus_pago = models.BooleanField(default=False)
-    fecha_pago =  models.DateField(null=True)
-    referencia_pago = models.CharField(max_length=15, null=True) 
+    fecha_pago =  models.DateField(null=True,blank=True)
+    referencia_pago = models.CharField(max_length=15, null=True, blank=True) 
     estatus = models.BooleanField(default=False)
     
     def __str__(self):
